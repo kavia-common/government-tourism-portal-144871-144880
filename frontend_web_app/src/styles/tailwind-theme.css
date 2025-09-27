@@ -1,0 +1,27 @@
+/* Tailwind v4 theme extensions using CSS layers */
+@import "tailwindcss";
+
+@layer theme, base, components, utilities;
+
+@layer theme {
+  :root {
+    /* Ocean Professional palette */
+    --color-ocean-primary: 37 99 235;    /* #2563EB */
+    --color-ocean-secondary: 245 158 11; /* #F59E0B */
+    --color-ocean-error: 239 68 68;      /* #EF4444 */
+    --color-ocean-surface: 255 255 255;  /* #ffffff */
+    --color-ocean-background: 249 250 251; /* #f9fafb */
+    --color-ocean-text: 17 24 39;        /* #111827 */
+  }
+}
+
+@layer utilities {
+  .text-ocean-primary { color: rgb(var(--color-ocean-primary)); }
+  .bg-ocean-primary { background-color: rgb(var(--color-ocean-primary)); }
+  .bg-ocean-surface { background-color: rgb(var(--color-ocean-surface)); }
+  .bg-ocean-background { background-color: rgb(var(--color-ocean-background)); }
+  .border-ocean-primary { border-color: rgb(var(--color-ocean-primary)); }
+  .shadow-soft { box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06); }
+  .rounded-xl { border-radius: 0.75rem; }
+  .gradient-ocean { background-image: linear-gradient(to right, rgba(59,130,246,0.1), #f9fafb); }
+}

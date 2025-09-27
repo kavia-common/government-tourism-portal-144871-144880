@@ -1,13 +1,17 @@
+@import "tailwindcss";
+@import "./styles/tailwind-theme.css";
+@import "./styles/tokens.css";
+
+/* Base app styling aligned to Ocean Professional */
+:root { color-scheme: light only; }
+
+html, body, #root { height: 100%; }
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: var(--color-background);
+  /* Use utility classes where possible; basic resets remain here */
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
