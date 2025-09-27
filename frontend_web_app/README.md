@@ -9,35 +9,53 @@ Modern React + Vite + Tailwind CSS application implementing:
 - Admin dashboard with Leaflet map, incidents, and alert management panels
 - Ocean Professional theme (blue & amber accents), responsive design
 
+## Prerequisites
+- Node.js 18+ and npm
+
+## Environment Setup
+1) Copy the example env file and adjust if needed:
+   cp .env.example .env
+
+2) Ensure these values are set:
+   - PORT=3000
+   - HOST=0.0.0.0
+   - VITE_API_BASE_URL=http://localhost:3001
+
+Vite will bind to HOST:PORT. The application reads the backend base URL from `import.meta.env.VITE_API_BASE_URL`.
+
 ## Getting Started
 
-1. Install dependencies
-   - npm install
+1) Install dependencies
+   npm install
 
-2. Run in development
-   - npm run dev
-   - Dev server runs on http://localhost:3000 (configured in vite.config.js)
+2) Run in development (Vite on http://0.0.0.0:3000)
+   npm run dev
+   - The scripts also accept environment overrides, e.g.:
+     HOST=0.0.0.0 PORT=3000 npm run dev
 
-3. Build for production
-   - npm run build
-   - npm run preview
+3) Build for production
+   npm run build
 
-This app uses simulated APIs (no backend required for demo). When integrating with the backend:
-- Backend default host/port: http://localhost:3001
-- Set the API base URL via environment variable:
-  - Copy .env.example to .env and set VITE_API_BASE_URL=http://localhost:3001
-- Alternatively, configure a Vite dev proxy (vite.config.js) to forward /api to http://localhost:3001
-  - Uncomment the proxy block and use fetch('/api/...') in your services
+4) Preview the production build (also bound to 0.0.0.0:3000)
+   npm run preview
+
+## Backend Integration
+
+- Default backend is expected at http://localhost:3001.
+- All API calls use the base URL from VITE_API_BASE_URL. Set it in `.env` (see .env.example).
+- Optionally, use a Vite proxy to avoid CORS during local development:
+  - In vite.config.js, uncomment the proxy block and set the target to http://localhost:3001
+  - Then call your APIs with `/api/...` paths from the frontend.
 
 ## Troubleshooting (Ports / Backend Readiness / CORS)
 
-- Frontend dev port:
-  - The dev server is set to port 3000 and host 0.0.0.0. If port 3000 is occupied, free it or change the port in vite.config.js and package.json.
+- Frontend dev server:
+  - Runs on port 3000 and host 0.0.0.0 by default. If port 3000 is in use, free it first (the project requirements fix it to 3000).
 - Backend not ready:
-  - The current frontend uses simulated APIs and does not require the backend to start. If you switch to real APIs, ensure the backend is running on port 3001 before using the app.
+  - The default UI uses simulated APIs for demonstration. If you switch to real endpoints, make sure the backend is running on :3001.
 - CORS:
-  - If calling the backend directly (no proxy) from http://localhost:3000 to http://localhost:3001, the backend must allow CORS from http://localhost:3000.
-  - Recommended during development: enable the Vite proxy so requests go through the same origin.
+  - When directly calling backend at http://localhost:3001 from http://localhost:3000, ensure the backend allows CORS from http://localhost:3000.
+  - Recommended: enable the Vite proxy during development.
 - Start-up order:
-  - Development with simulated APIs: frontend only.
-  - With real backend: start backend on :3001 first, then start frontend on :3000.
+  - With real backend: start backend on :3001 first, then frontend on :3000.
+
