@@ -6,7 +6,7 @@ How to run the frontend_web_app:
 1. cd frontend_web_app
 2. npm install
 3. npm run dev
-4. Open http://localhost:5173
+4. Open http://localhost:3000
 
 Features implemented:
 - Agent/Admin login (simulated)
