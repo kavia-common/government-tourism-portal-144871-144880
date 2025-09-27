@@ -1,5 +1,12 @@
 import dayjs from 'dayjs'
 
+/**
+ * API base URL. When switching from simulated APIs to the real backend,
+ * use import.meta.env.VITE_API_BASE_URL (see .env.example) or configure a Vite proxy.
+ * Default is http://localhost:3001.
+ */
+export const API_BASE_URL = import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:3001'
+
 // PUBLIC_INTERFACE
 export async function login({ role, email, password }) {
   /** Simulated login API. */
