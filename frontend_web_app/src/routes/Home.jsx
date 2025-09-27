@@ -17,6 +17,9 @@ export default function Home() {
             <a href="/register"><Button variant="outline">Registration</Button></a>
             <a href="/renew"><Button variant="secondary">Renewal</Button></a>
           </div>
+          <p className="text-xs text-gray-500 mt-4">
+            Note: Set REACT_APP_API_BASE_URL in your environment to connect to backend.
+          </p>
         </CardContent>
       </Card>
 
