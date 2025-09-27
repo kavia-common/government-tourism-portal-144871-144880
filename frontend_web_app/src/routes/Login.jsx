@@ -4,7 +4,8 @@ import Button from "../components/ui/Button";
 import { useState } from "react";
 import { useToast } from "../components/ui/Toast";
 import { loginAgent, loginAdmin } from "../api/modules/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 // PUBLIC_INTERFACE
 export default function Login() {
@@ -13,23 +14,36 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState(null);
   const { add: toast } = useToast();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || (role === "admin" ? "/admin" : "/");
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setFormError(null);
     setSubmitting(true);
     try {
       const fn = role === "admin" ? loginAdmin : loginAgent;
       const res = await fn({ username, password });
       if (res.ok) {
+        // capture tokens already stored by module, also set role context
+        const token = res.data?.accessToken || res.data?.token || null;
+        if (token) {
+          // setAuth will persist role for guards
+          setAuth({ accessToken: token, refreshToken: res.data?.refreshToken || null }, role);
+        }
         toast("Login successful", "success");
-        navigate(role === "admin" ? "/admin" : "/");
+        navigate(from, { replace: true });
       } else {
         const msg = (res.data && (res.data.message || res.data.error)) || "Invalid credentials";
+        setFormError(msg);
         toast(`Login failed: ${msg}`, "danger");
       }
     } catch (err) {
+      setFormError("Network error. Please try again.");
       toast("Network error. Please try again.", "danger");
     } finally {
       setSubmitting(false);
@@ -41,7 +55,7 @@ export default function Login() {
       <Card>
         <CardHeader title="Login" subtitle="Agent and Admin authentication" />
         <CardContent>
-          <form className="space-y-4" onSubmit={onSubmit}>
+          <form className="space-y-4" onSubmit={onSubmit} noValidate>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -64,7 +78,7 @@ export default function Login() {
             <Input
               id="username"
               label="Username"
-              placeholder="Enter username"
+              placeholder={role === "admin" ? "admin" : "agent1"}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -78,8 +92,16 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {formError && (
+              <div className="text-sm text-red-600">{formError}</div>
+            )}
             <Button type="submit" className="w-full" disabled={submitting}>
-              {submitting ? "Signing in..." : "Sign in"}
+              {submitting ? (
+                <span className="inline-flex items-center">
+                  <Spinner />
+                  <span className="ml-2">Signing in...</span>
+                </span>
+              ) : "Sign in"}
             </Button>
           </form>
         </CardContent>
@@ -94,5 +116,14 @@ export default function Login() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg className="animate-spin h-4 w-4 text-ocean-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/>
+    </svg>
   );
 }

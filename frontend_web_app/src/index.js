@@ -9,6 +9,8 @@ import Registration from './routes/Registration';
 import Renewal from './routes/Renewal';
 import AdminDashboard from './routes/AdminDashboard';
 import { ToastProvider } from './components/ui/Toast';
+import { AuthProvider } from './auth/AuthContext';
+import ProtectedRoute from './auth/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -16,9 +18,32 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/login", element: <Login /> },
-      { path: "/register", element: <Registration /> },
-      { path: "/renew", element: <Renewal /> },
-      { path: "/admin", element: <AdminDashboard /> }
+      // Registration and renewal require auth (agent or admin)
+      {
+        path: "/register",
+        element: (
+          <ProtectedRoute allowedRoles={['agent', 'admin']}>
+            <Registration />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "/renew",
+        element: (
+          <ProtectedRoute allowedRoles={['agent', 'admin']}>
+            <Renewal />
+          </ProtectedRoute>
+        )
+      },
+      // Admin dashboard requires admin role
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        )
+      }
     ]
   }
 ]);
@@ -27,7 +52,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ToastProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ToastProvider>
   </React.StrictMode>
 );

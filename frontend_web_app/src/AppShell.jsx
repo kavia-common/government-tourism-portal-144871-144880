@@ -1,11 +1,20 @@
 /* AppShell provides the main layout with header and navigation placeholders */
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import logo from "./logo.svg";
 import Button from "./components/ui/Button";
+import { useAuth } from "./auth/AuthContext";
 
 export default function AppShell() {
+  const { isAuthenticated, role, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-ocean-background">
       <header className="bg-white/90 backdrop-blur border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -28,15 +37,32 @@ export default function AppShell() {
             >
               Home
             </NavLink>
-            <NavLink to="/login">
-              <Button variant="outline" size="sm">Login</Button>
-            </NavLink>
-            <NavLink to="/register">
-              <Button variant="secondary" size="sm">Registration</Button>
-            </NavLink>
-            <NavLink to="/admin">
-              <Button size="sm">Admin</Button>
-            </NavLink>
+
+            {!isAuthenticated && (
+              <>
+                <NavLink to="/login">
+                  <Button variant="outline" size="sm">Login</Button>
+                </NavLink>
+                <NavLink to="/register">
+                  <Button variant="secondary" size="sm">Registration</Button>
+                </NavLink>
+              </>
+            )}
+
+            {isAuthenticated && (
+              <>
+                <NavLink to="/renew">
+                  <Button variant="outline" size="sm">Renewal</Button>
+                </NavLink>
+                <NavLink to="/admin">
+                  <Button size="sm">Admin</Button>
+                </NavLink>
+                <span className="text-xs text-gray-600 px-2 py-1 rounded bg-gray-50 border border-gray-200">
+                  Signed in as {role || "user"}
+                </span>
+                <Button variant="ghost" size="sm" onClick={onLogout}>Logout</Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -47,7 +73,7 @@ export default function AppShell() {
         </div>
       </main>
 
-      <footer className="border-t border-gray-200">
+      <footer className="border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-500">
           © {new Date().getFullYear()} Ministry of Tourism. All rights reserved.
         </div>

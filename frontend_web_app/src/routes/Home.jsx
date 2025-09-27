@@ -1,9 +1,12 @@
 import Button from "../components/ui/Button";
 import Card, { CardContent } from "../components/ui/Card";
+import { useAuth } from "../auth/AuthContext";
 
 // PUBLIC_INTERFACE
 export default function Home() {
   /** Landing page showing agent and admin login entry points. */
+  const { isAuthenticated, role } = useAuth();
+
   return (
     <section className="space-y-6">
       <Card>
@@ -13,9 +16,17 @@ export default function Home() {
             Access agent and admin tools for tourist registrations, renewals, and incident management.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/login"><Button>Agent/Admin Login</Button></a>
-            <a href="/register"><Button variant="outline">Registration</Button></a>
-            <a href="/renew"><Button variant="secondary">Renewal</Button></a>
+            {!isAuthenticated ? (
+              <>
+                <a href="/login"><Button>Agent/Admin Login</Button></a>
+              </>
+            ) : (
+              <>
+                {role === "admin" && <a href="/admin"><Button>Go to Admin</Button></a>}
+                <a href="/register"><Button variant="outline">Registration</Button></a>
+                <a href="/renew"><Button variant="secondary">Renewal</Button></a>
+              </>
+            )}
           </div>
           <p className="text-xs text-gray-500 mt-4">
             Note: Set REACT_APP_API_BASE_URL in your environment to connect to backend.

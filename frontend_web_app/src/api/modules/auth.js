@@ -1,19 +1,21 @@
 import { post, apiFetch, setTokens, clearTokens } from "../client";
 
+/** internal helper to persist tokens from response in a flexible format */
+function persistTokensFromResponse(res) {
+  const { accessToken, refreshToken, token } = res?.data || {};
+  if (accessToken || token) {
+    setTokens({
+      accessToken: accessToken || token,
+      refreshToken: refreshToken || null,
+    });
+  }
+}
+
 // PUBLIC_INTERFACE
 export async function loginAgent({ username, password }) {
   /** Login as Agent and store tokens. */
   const res = await post("/auth/agent/login", { username, password }, { auth: false });
-  if (res.ok) {
-    // Accept flexible token shapes; fallback to data.token
-    const { accessToken, refreshToken, token } = res.data || {};
-    if (accessToken || token) {
-      setTokens({
-        accessToken: accessToken || token,
-        refreshToken: refreshToken || null,
-      });
-    }
-  }
+  if (res.ok) persistTokensFromResponse(res);
   return res;
 }
 
@@ -21,15 +23,7 @@ export async function loginAgent({ username, password }) {
 export async function loginAdmin({ username, password }) {
   /** Login as Admin and store tokens. */
   const res = await post("/auth/admin/login", { username, password }, { auth: false });
-  if (res.ok) {
-    const { accessToken, refreshToken, token } = res.data || {};
-    if (accessToken || token) {
-      setTokens({
-        accessToken: accessToken || token,
-        refreshToken: refreshToken || null,
-      });
-    }
-  }
+  if (res.ok) persistTokensFromResponse(res);
   return res;
 }
 

@@ -7,6 +7,7 @@ import AlertPanel from "../components/dashboard/AlertPanel";
 import { useEffect, useState } from "react";
 import { listIncidents } from "../api/modules/incidents";
 import { useToast } from "../components/ui/Toast";
+import { useAuth } from "../auth/AuthContext";
 
 // PUBLIC_INTERFACE
 export default function AdminDashboard() {
@@ -16,6 +17,7 @@ export default function AdminDashboard() {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(false);
   const { add: toast } = useToast();
+  const { role } = useAuth();
 
   const loadIncidents = async () => {
     setLoading(true);
@@ -45,7 +47,7 @@ export default function AdminDashboard() {
     <div className="grid lg:grid-cols-4 gap-6">
       <aside className="lg:col-span-1 space-y-4">
         <Card>
-          <CardHeader title="Status" />
+          <CardHeader title="Status" subtitle={role ? `Role: ${role}` : undefined} />
           <CardContent>
             <ul className="text-sm text-gray-600 space-y-1">
               <li>Incidents: {incidents.length}</li>
@@ -78,7 +80,12 @@ export default function AdminDashboard() {
                 <option value="closed">Closed</option>
               </select>
               <Button className="w-full" onClick={loadIncidents} disabled={loading}>
-                {loading ? "Loading..." : "Apply"}
+                {loading ? (
+                  <span className="inline-flex items-center">
+                    <Spinner />
+                    <span className="ml-2">Loading...</span>
+                  </span>
+                ) : "Apply"}
               </Button>
             </div>
           </CardContent>
@@ -89,14 +96,16 @@ export default function AdminDashboard() {
 
       <section className="lg:col-span-3 space-y-6">
         <MapView />
-        {/* Keep existing StatusCards visuals; in a full integration, pass real KPIs */}
         <StatusCards />
-        {/* Render a simple list using existing component placeholder;
-            For deeper integration, replace with data-driven list */}
         <Card>
           <CardHeader title="Incidents (Live)" subtitle="Loaded from API" />
           <CardContent>
-            {incidents.length === 0 ? (
+            {loading ? (
+              <div className="w-full py-6 flex items-center justify-center text-gray-600">
+                <Spinner />
+                <span className="ml-2 text-sm">Fetching incidents...</span>
+              </div>
+            ) : incidents.length === 0 ? (
               <p className="text-sm text-gray-500">No incidents found.</p>
             ) : (
               <ul className="divide-y divide-gray-100">
@@ -122,5 +131,14 @@ export default function AdminDashboard() {
         <IncidentList />
       </section>
     </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg className="animate-spin h-4 w-4 text-ocean-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/>
+    </svg>
   );
 }
