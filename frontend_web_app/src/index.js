@@ -6,7 +6,9 @@ import AppShell from './AppShell';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Registration from './routes/Registration';
+import Renewal from './routes/Renewal';
 import AdminDashboard from './routes/AdminDashboard';
+import { ToastProvider } from './components/ui/Toast';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Registration /> },
+      { path: "/renew", element: <Renewal /> },
       { path: "/admin", element: <AdminDashboard /> }
     ]
   }
@@ -23,6 +26,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ToastProvider>
+      <RouterProvider router={router} />
+    </ToastProvider>
   </React.StrictMode>
 );

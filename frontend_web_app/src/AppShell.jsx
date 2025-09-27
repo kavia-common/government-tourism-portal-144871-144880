@@ -1,6 +1,7 @@
 /* AppShell provides the main layout with header and navigation placeholders */
 import { NavLink, Outlet } from "react-router-dom";
 import logo from "./logo.svg";
+import Button from "./components/ui/Button";
 
 export default function AppShell() {
   return (
@@ -16,7 +17,7 @@ export default function AppShell() {
               <p className="text-xs text-gray-500">Ocean Professional</p>
             </div>
           </div>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-2">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -27,23 +28,14 @@ export default function AppShell() {
             >
               Home
             </NavLink>
-            <NavLink
-              to="/login"
-              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
-              Login
+            <NavLink to="/login">
+              <Button variant="outline" size="sm">Login</Button>
             </NavLink>
-            <NavLink
-              to="/register"
-              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
-              Registration
+            <NavLink to="/register">
+              <Button variant="secondary" size="sm">Registration</Button>
             </NavLink>
-            <NavLink
-              to="/admin"
-              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
-              Admin
+            <NavLink to="/admin">
+              <Button size="sm">Admin</Button>
             </NavLink>
           </nav>
         </div>
