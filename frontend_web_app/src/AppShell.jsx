@@ -1,6 +1,5 @@
 /* AppShell provides the main layout with header and navigation placeholders */
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import logo from "./logo.svg";
 import Button from "./components/ui/Button";
 import { useAuth } from "./auth/AuthContext";
 
@@ -18,7 +17,9 @@ export default function AppShell() {
       <header className="bg-white/90 backdrop-blur border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logo} className="w-10 h-10" alt="logo" />
+            <div className="w-10 h-10 rounded-xl bg-ocean-primary/10 flex items-center justify-center">
+              <span className="text-ocean-primary font-bold">GT</span>
+            </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
                 Government Tourism Portal
@@ -43,20 +44,22 @@ export default function AppShell() {
                 <NavLink to="/login">
                   <Button variant="outline" size="sm">Login</Button>
                 </NavLink>
-                <NavLink to="/register">
-                  <Button variant="secondary" size="sm">Registration</Button>
-                </NavLink>
               </>
             )}
 
             {isAuthenticated && (
               <>
+                <NavLink to="/register">
+                  <Button variant="secondary" size="sm">Registration</Button>
+                </NavLink>
                 <NavLink to="/renew">
                   <Button variant="outline" size="sm">Renewal</Button>
                 </NavLink>
-                <NavLink to="/admin">
-                  <Button size="sm">Admin</Button>
-                </NavLink>
+                {role === "admin" && (
+                  <NavLink to="/admin">
+                    <Button size="sm">Admin</Button>
+                  </NavLink>
+                )}
                 <span className="text-xs text-gray-600 px-2 py-1 rounded bg-gray-50 border border-gray-200">
                   Signed in as {role || "user"}
                 </span>

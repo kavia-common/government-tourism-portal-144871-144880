@@ -9,14 +9,12 @@ html, body, #root { height: 100%; }
 
 body {
   background-color: var(--color-background);
-  /* Use utility classes where possible; basic resets remain here */
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Link and focus styling for accessibility */
 a { color: rgb(var(--color-ocean-primary)); text-decoration: none; }
 a:hover { text-decoration: underline; }
 :focus-visible { outline: 2px solid rgb(var(--color-ocean-primary)); outline-offset: 2px; }

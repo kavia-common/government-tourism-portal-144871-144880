@@ -1,54 +1,56 @@
 # Government Tourism Portal — Frontend Web App
 
-Modern React + Tailwind (v4) frontend implementing the Ocean Professional theme (blue primary with amber accents), featuring:
+A fresh React + Tailwind (v4) frontend implementing the Ocean Professional theme.
+
+Core features:
 - Agent and Admin login (role-based)
-- Tourist Registration with optional OTP and simulated Blockchain ID issuance
+- Tourist Registration with OTP (mocked) and simulated Blockchain ID issuance
 - Tourist Renewal
 - Admin Dashboard with map placeholder, alert panel, incident list, and status cards
-- Responsive layout with clean, minimalist styling and subtle gradients/shadows
+- Clean, minimalist styling with blue/amber accents and subtle shadows
 
-## Getting Started
+Tech:
+- React 18, React Router v6
+- Tailwind CSS v4 (via @tailwindcss/postcss)
+- Environment-driven API base URL
 
+Quick start:
 1) Install dependencies:
    npm install
 
 2) Configure environment:
-   - Copy .env.example to .env and set REACT_APP_API_BASE_URL
-   - If no backend is available, UI will still load; API calls will fail gracefully and show toasts.
+   cp .env.example .env
+   # Set REACT_APP_API_BASE_URL to your backend base URL (or leave empty for mocks/fallback)
 
-3) Run in development:
+3) Run:
    npm start
-   Open http://localhost:3000
+   # Open http://localhost:3000
 
-## Project Structure
+Routing:
+- /           Home
+- /login      Login (toggle Agent/Admin)
+- /register   Registration (requires Agent/Admin login)
+- /renew      Renewal (requires Agent/Admin login)
+- /admin      Admin Dashboard (requires Admin login)
 
+Environment:
+- REACT_APP_API_BASE_URL (string): Base URL for backend (e.g., http://localhost:8080)
+
+Structure:
 - src/auth: Auth context and ProtectedRoute
-- src/api: Minimal fetch client and API modules (auth, tourists, incidents, map, otp)
-- src/components/ui: Reusable UI primitives (Button, Card, Input, Toast, etc.)
-- src/components/dashboard: Dashboard widgets (MapView placeholder, StatusCards, AlertPanel, IncidentList)
+- src/api: Fetch client and modules (auth, tourists, incidents, map, otp)
+- src/components/ui: UI primitives (Button, Card, Input, Modal, Toast, Badge)
+- src/components/dashboard: Dashboard widgets (MapView, StatusCards, AlertPanel, IncidentList)
 - src/routes: Pages (Home, Login, Registration, Renewal, AdminDashboard)
-- src/styles: Tailwind theme and tokens (Ocean Professional)
+- src/styles: Tailwind theme and tokens
 
-## Theming
+Notes:
+- API calls are designed to gracefully handle missing backends; toasts will indicate failures.
+- OTP is mocked for UX demonstration.
+- Registration displays a simulated Blockchain ID upon success (client-side only, not cryptographic).
+- Ensure accessibility and responsiveness across viewports.
 
-The Ocean Professional theme is defined via CSS variables and Tailwind utilities:
-- Primary: #2563EB
-- Secondary: #F59E0B
-- Error: #EF4444
-- Background: #f9fafb
-- Surface: #ffffff
-- Text: #111827
-
-See src/styles/tailwind-theme.css and src/styles/tokens.css.
-
-## Notes
-
-- Set REACT_APP_API_BASE_URL in .env to connect to a backend. The API client includes token handling and refresh retry.
-- OTP endpoints and backend routes are placeholders; you can hook them to your backend implementation.
-- The registration page simulates a Blockchain ID on success to demonstrate end-to-end UX.
-
-## Scripts
-
-- npm start — CRA dev server
-- npm test — CRA test runner
-- npm run build — Production build
+Scripts:
+- npm start — development server
+- npm test — test runner
+- npm run build — production build
