@@ -6,6 +6,20 @@ import { useToast } from "../components/ui/Toast";
 import { createTourist } from "../api/modules/tourists";
 import { requestOtp, verifyOtp } from "../api/modules/otp";
 
+/**
+ * Generate a simulated blockchain ID (non-cryptographic, client-side).
+ * This is for UX demonstration only and NOT suitable for production identity.
+ */
+function simulateBlockchainId(seed) {
+  const input = `${seed}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
+  let hash = 5381;
+  for (let i = 0; i < input.length; i++) {
+    hash = (hash * 33) ^ input.charCodeAt(i);
+  }
+  const hex = (hash >>> 0).toString(16).padStart(8, "0");
+  return `BCID-${hex.toUpperCase()}`;
+}
+
 // PUBLIC_INTERFACE
 export default function Registration() {
   /** Tourist registration integrated with backend; optional email OTP verification. */
@@ -19,6 +33,8 @@ export default function Registration() {
   const [otpRequested, setOtpRequested] = useState(false);
   const [otpCode, setOtpCode] = useState("");
 
+  const [issuedBlockchainId, setIssuedBlockchainId] = useState(null);
+
   const [errors, setErrors] = useState({});
   const { add: toast } = useToast();
 
@@ -28,7 +44,7 @@ export default function Registration() {
     if (!passportNumber.trim()) e.passportNumber = "Passport number is required";
     const days = Number(validityDays);
     if (Number.isNaN(days) || days <= 0) e.validityDays = "Enter a valid number of days";
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email";
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) e.email = "Enter a valid email";
     if (email && otpRequested && !otpCode.trim()) e.otp = "Enter the OTP you received";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -71,7 +87,11 @@ export default function Registration() {
       });
 
       if (res.ok) {
-        toast("Tourist registered successfully", "success");
+        // Simulate client-side blockchain ID issuance for demo
+        const bcid = simulateBlockchainId(`${passportNumber}:${fullName}`);
+        setIssuedBlockchainId(bcid);
+        toast(`Tourist registered. Blockchain ID issued: ${bcid}`, "success");
+
         // reset form
         setFullName("");
         setPassportNumber("");
@@ -116,6 +136,15 @@ export default function Registration() {
             </Button>
           </div>
         </form>
+
+        {issuedBlockchainId && (
+          <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-blue-50">
+            <p className="text-sm text-gray-700">
+              Simulated Blockchain ID issued for the last registration:
+            </p>
+            <p className="mt-1 font-mono text-sm text-blue-800">{issuedBlockchainId}</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
